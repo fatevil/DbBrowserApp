@@ -1,8 +1,12 @@
 package com.ataccama.restapiapp.model;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 
 /**
@@ -10,18 +14,23 @@ import javax.persistence.Entity;
  */
 @Data
 @Entity
+@NoArgsConstructor
 public class DatabaseConnection {
 
-    private final String name;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
-    private final String hostname;
+    private String name;
 
-    private final int port;
+    private String hostname;
 
-    private final String databaseName;
+    private int port;
 
-    private final String username;
+    private String databaseName;
 
-    private final String password;
+    private String username;
+
+    private String password;
 
 }
