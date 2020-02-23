@@ -4,6 +4,10 @@ import lombok.Data;
 
 import javax.persistence.Entity;
 
+
+/**
+ * Entity class representing MySQL DB connection details.
+ */
 @Data
 @Entity
 public class DatabaseConnection {
