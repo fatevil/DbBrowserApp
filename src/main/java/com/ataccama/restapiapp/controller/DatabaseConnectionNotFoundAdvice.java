@@ -13,7 +13,7 @@ public class DatabaseConnectionNotFoundAdvice {
     @ResponseBody
     @ExceptionHandler(DatabaseConnectionNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    String employeeNotFoundHandler(DatabaseConnectionNotFoundException ex) {
+    String databaseConnectionNotFoundHandler(DatabaseConnectionNotFoundException ex) {
         return ex.getMessage();
     }
 }

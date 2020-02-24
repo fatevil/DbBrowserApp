@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -27,7 +28,7 @@ public class DatabaseConnectionExtrasController {
     private DatabaseConnectionService service;
 
     @GetMapping("/databaseConnections/{connectionId}/schemas")
-    public List<DatabaseConnectionSchemaDto> getSchemas(@PathVariable Long connectionId) {
+    public List<DatabaseConnectionSchemaDto> getSchemas(@PathVariable Long connectionId) throws SQLException {
 
         DatabaseConnection databaseConnection = repository
                 .findById(connectionId)
@@ -37,7 +38,7 @@ public class DatabaseConnectionExtrasController {
     }
 
     @GetMapping("/databaseConnections/{connectionId}/tables/{schema}")
-    public List<DatabaseConnectionTableDto> getTables(@PathVariable Long connectionId, @PathVariable String schema) {
+    public List<DatabaseConnectionTableDto> getTables(@PathVariable Long connectionId, @PathVariable String schema) throws SQLException {
 
         DatabaseConnection databaseConnection = repository
                 .findById(connectionId)
@@ -47,7 +48,7 @@ public class DatabaseConnectionExtrasController {
     }
 
     @GetMapping("/databaseConnections/{connectionId}/columns/{schema}/{table}")
-    public List<DatabaseConnectionColumnDto> getTables(@PathVariable Long connectionId, @PathVariable String schema, @PathVariable String table) {
+    public List<DatabaseConnectionColumnDto> getTables(@PathVariable Long connectionId, @PathVariable String schema, @PathVariable String table) throws SQLException {
 
         DatabaseConnection databaseConnection = repository
                 .findById(connectionId)
@@ -60,7 +61,7 @@ public class DatabaseConnectionExtrasController {
     }
 
     @GetMapping("/databaseConnections/{connectionId}/preview/{schema}/{table}")
-    public String getDataPreview(@PathVariable Long connectionId, @PathVariable String schema, @PathVariable String table) {
+    public String getDataPreview(@PathVariable Long connectionId, @PathVariable String schema, @PathVariable String table) throws SQLException {
 
         DatabaseConnection databaseConnection = repository
                 .findById(connectionId)

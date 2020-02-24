@@ -7,13 +7,15 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.sql.SQLException;
+
 @ControllerAdvice
-public class DatabaseConnectionNotFoundAdvice {
+public class DatabaseConnectionWrongRequestAdvice {
 
     @ResponseBody
-    @ExceptionHandler(DatabaseConnectionNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    String employeeNotFoundHandler(DatabaseConnectionNotFoundException ex) {
+    @ExceptionHandler(SQLException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    String sqlExceptionHandler(SQLException ex) {
         return ex.getMessage();
     }
 }
