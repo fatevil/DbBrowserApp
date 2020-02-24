@@ -1,5 +1,6 @@
 package com.ataccama.restapiapp.controller;
 
+import com.ataccama.restapiapp.data.DatabaseConnectionColumnDto;
 import com.ataccama.restapiapp.data.DatabaseConnectionSchemaDto;
 import com.ataccama.restapiapp.data.DatabaseConnectionTableDto;
 import com.ataccama.restapiapp.exception.DatabaseConnectionNotFoundException;
@@ -42,5 +43,13 @@ public class DatabaseConnectionExtrasController {
         return service.getTables(databaseConnection, schema);
     }
 
+    @GetMapping("/databaseConnections/{connectionId}/columns/{schema}/{table}")
+    public List<DatabaseConnectionColumnDto> getTables(@PathVariable Long connectionId, @PathVariable String schema, @PathVariable String table) {
 
+        DatabaseConnection databaseConnection = repository
+                .findById(connectionId)
+                .orElseThrow(() -> new DatabaseConnectionNotFoundException(connectionId));
+
+        return service.getColumnInfo(databaseConnection, schema, table);
+    }
 }

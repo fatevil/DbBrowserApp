@@ -1,5 +1,6 @@
 package com.ataccama.restapiapp.service;
 
+import com.ataccama.restapiapp.data.DatabaseConnectionColumnDto;
 import com.ataccama.restapiapp.data.DatabaseConnectionSchemaDto;
 import com.ataccama.restapiapp.data.DatabaseConnectionTableDto;
 import com.ataccama.restapiapp.model.DatabaseConnection;
@@ -59,6 +60,34 @@ public class DatabaseConnectionService {
         } catch (SQLException e) {
             return null;
         }
+    }
+
+    public List<DatabaseConnectionColumnDto> getColumnInfo(DatabaseConnection databaseConnection, String schema, String table) {
+        try (Connection actualConnection = getConnection(databaseConnection)) {
+            DatabaseMetaData md = actualConnection.getMetaData();
+            ResultSet columns = md.getColumns(schema, null, table, null);
+
+            List<DatabaseConnectionColumnDto> list = new ArrayList<>();
+            while (columns.next()) {
+                DatabaseConnectionColumnDto dto = DatabaseConnectionColumnDto.builder()
+                        .columnName(columns.getString("COLUMN_NAME"))
+                        .columnType(columns.getString("TYPE_NAME"))
+                        .columnSize(columns.getString("COLUMN_SIZE"))
+                        .decimalDigits(columns.getString("DECIMAL_DIGITS"))
+                        .isNullable(columns.getString("IS_NULLABLE"))
+                        .isAutoincrement(columns.getString("IS_AUTOINCREMENT"))
+                        .build();
+
+                list.add(dto);
+            }
+
+            return list;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+
     }
 
 
