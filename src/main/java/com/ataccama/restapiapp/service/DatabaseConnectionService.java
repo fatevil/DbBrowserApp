@@ -145,7 +145,7 @@ public class DatabaseConnectionService {
 
             // not ideal, DB should be prevented from having sql injection
             // prepared statement does not allow parametrized table name
-            String sql = String.format("SELECT * FROM %s", table);
+            String sql = String.format("SELECT * FROM %s LIMIT 10", table);
             PreparedStatement statement = actualConnection.prepareStatement(sql);
 
             ResultSet resultSet = statement.executeQuery();
