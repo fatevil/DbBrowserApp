@@ -19,6 +19,8 @@ import java.util.Set;
 @RestController
 public class DatabaseConnectionExtrasController {
 
+    // add endpoints to HAL Browser https://stackoverflow.com/questions/34285829/spring-data-rest-how-to-expose-custom-rest-controller-method-in-the-hal-browse
+
     @Autowired
     private DatabaseConnectionRepository repository;
 
