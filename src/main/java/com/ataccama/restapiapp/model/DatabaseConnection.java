@@ -33,4 +33,16 @@ public class DatabaseConnection {
 
     private String password;
 
+    public String getConnectionString() {
+        StringBuilder st = new StringBuilder();
+        st.append("jdbc:mysql://");
+        st.append(hostname);
+        st.append(":");
+        st.append(port);
+        st.append("/");
+        st.append(databaseName);
+
+        return st.toString();
+    }
+
 }
