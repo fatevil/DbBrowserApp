@@ -16,14 +16,26 @@ import java.util.*;
 @Service
 public class DatabaseConnectionService {
 
-    private Connection getConnection(DatabaseConnection databaseConnection) throws SQLException {
+    private Map<Long, Connection> map = new HashMap<>();
+
+    private synchronized Connection getConnection(DatabaseConnection databaseConnection) throws SQLException {
+        if (map.containsKey(databaseConnection.getId())) {
+            Connection connection = map.get(databaseConnection.getId());
+            if (!connection.isClosed()) {
+                return connection;
+            }
+        }
+
         HikariDataSource datasource = new HikariDataSource();
         datasource.setJdbcUrl(databaseConnection.getConnectionString());
         datasource.setUsername(databaseConnection.getUsername());
         datasource.setPassword(databaseConnection.getPassword());
 
         datasource.setConnectionTimeout(2000);
-        return datasource.getConnection();
+
+        Connection connection = datasource.getConnection();
+        map.put(databaseConnection.getId(), connection);
+        return connection;
     }
 
     public List<DatabaseConnectionSchemaDto> getSchemas(DatabaseConnection databaseConnection) throws SQLException {
