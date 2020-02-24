@@ -13,8 +13,6 @@ public class DatabaseConnectionColumnStatisticDto {
 
     private final String column;
 
-    private final String statistic;
-
     private final String min;
 
     private final String max;

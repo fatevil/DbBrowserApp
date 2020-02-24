@@ -78,6 +78,18 @@ public class DatabaseConnectionExtrasController {
                 .findById(connectionId)
                 .orElseThrow(() -> new DatabaseConnectionNotFoundException(connectionId));
 
-        return statisticsService.getColumnStatistic(databaseConnection, schema, table, column);
+        return statisticsService.getTableStatistic(databaseConnection, schema, table, column);
     }
+
+    @GetMapping("/databaseConnections/{connectionId}/statistics/{schema}/{table}")
+    public DatabaseConnectionTableStatisticDto getTableStatistics(@PathVariable Long connectionId, @PathVariable String schema, @PathVariable String table) throws SQLException {
+
+        DatabaseConnection databaseConnection = repository
+                .findById(connectionId)
+                .orElseThrow(() -> new DatabaseConnectionNotFoundException(connectionId));
+
+        return statisticsService.getTableStatistic(databaseConnection, schema, table);
+    }
+
+
 }
