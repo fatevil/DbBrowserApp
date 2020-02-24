@@ -50,7 +50,7 @@ public class DatabaseConnectionService {
         return list;
     }
 
-    public List<DatabaseConnectionColumnDto> getColumnInfo(DatabaseConnection databaseConnection, String schema, String table, Set<String> primaryKeys, Map<String, ForeignKey> foreignKeys) throws SQLException {
+    public List<DatabaseConnectionColumnDto> getColumns(DatabaseConnection databaseConnection, String schema, String table, Set<String> primaryKeys, Map<String, ForeignKey> foreignKeys) throws SQLException {
         Connection actualConnection = actualConnectionService.getConnection(databaseConnection);
         DatabaseMetaData metadata = actualConnection.getMetaData();
         ResultSet columns = metadata.getColumns(schema, null, table, null);

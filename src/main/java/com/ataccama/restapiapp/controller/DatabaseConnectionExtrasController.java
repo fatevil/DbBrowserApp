@@ -1,13 +1,11 @@
 package com.ataccama.restapiapp.controller;
 
-import com.ataccama.restapiapp.data.DatabaseConnectionColumnDto;
-import com.ataccama.restapiapp.data.DatabaseConnectionSchemaDto;
-import com.ataccama.restapiapp.data.DatabaseConnectionTableDto;
-import com.ataccama.restapiapp.data.ForeignKey;
+import com.ataccama.restapiapp.data.*;
 import com.ataccama.restapiapp.exception.DatabaseConnectionNotFoundException;
 import com.ataccama.restapiapp.model.DatabaseConnection;
 import com.ataccama.restapiapp.repository.DatabaseConnectionRepository;
 import com.ataccama.restapiapp.service.DatabaseConnectionService;
+import com.ataccama.restapiapp.service.DatabaseConnectionStatisticsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,7 +23,10 @@ public class DatabaseConnectionExtrasController {
     private DatabaseConnectionRepository repository;
 
     @Autowired
-    private DatabaseConnectionService service;
+    private DatabaseConnectionService databaseConnectionService;
+
+    @Autowired
+    private DatabaseConnectionStatisticsService statisticsService;
 
     @GetMapping("/databaseConnections/{connectionId}/schemas")
     public List<DatabaseConnectionSchemaDto> getSchemas(@PathVariable Long connectionId) throws SQLException {
@@ -34,30 +35,30 @@ public class DatabaseConnectionExtrasController {
                 .findById(connectionId)
                 .orElseThrow(() -> new DatabaseConnectionNotFoundException(connectionId));
 
-        return service.getSchemas(databaseConnection);
+        return databaseConnectionService.getSchemas(databaseConnection);
     }
 
     @GetMapping("/databaseConnections/{connectionId}/tables/{schema}")
-    public List<DatabaseConnectionTableDto> getTables(@PathVariable Long connectionId, @PathVariable String schema) throws SQLException {
+    public List<DatabaseConnectionTableDto> getColumns(@PathVariable Long connectionId, @PathVariable String schema) throws SQLException {
 
         DatabaseConnection databaseConnection = repository
                 .findById(connectionId)
                 .orElseThrow(() -> new DatabaseConnectionNotFoundException(connectionId));
 
-        return service.getTables(databaseConnection, schema);
+        return databaseConnectionService.getTables(databaseConnection, schema);
     }
 
     @GetMapping("/databaseConnections/{connectionId}/columns/{schema}/{table}")
-    public List<DatabaseConnectionColumnDto> getTables(@PathVariable Long connectionId, @PathVariable String schema, @PathVariable String table) throws SQLException {
+    public List<DatabaseConnectionColumnDto> getColumns(@PathVariable Long connectionId, @PathVariable String schema, @PathVariable String table) throws SQLException {
 
         DatabaseConnection databaseConnection = repository
                 .findById(connectionId)
                 .orElseThrow(() -> new DatabaseConnectionNotFoundException(connectionId));
 
-        Map<String, ForeignKey> foreignKeys = service.getForeignKeys(databaseConnection, schema, table);
-        Set<String> primaryKeys = service.getPrimaryKeys(databaseConnection, schema, table);
+        Map<String, ForeignKey> foreignKeys = databaseConnectionService.getForeignKeys(databaseConnection, schema, table);
+        Set<String> primaryKeys = databaseConnectionService.getPrimaryKeys(databaseConnection, schema, table);
 
-        return service.getColumnInfo(databaseConnection, schema, table, primaryKeys, foreignKeys);
+        return databaseConnectionService.getColumns(databaseConnection, schema, table, primaryKeys, foreignKeys);
     }
 
     @GetMapping("/databaseConnections/{connectionId}/preview/{schema}/{table}")
@@ -67,7 +68,16 @@ public class DatabaseConnectionExtrasController {
                 .findById(connectionId)
                 .orElseThrow(() -> new DatabaseConnectionNotFoundException(connectionId));
 
-        return service.getDataPreview(databaseConnection, schema, table);
+        return databaseConnectionService.getDataPreview(databaseConnection, schema, table);
     }
 
+    @GetMapping("/databaseConnections/{connectionId}/statistics/{schema}/{table}/{column}/{statisticType}")
+    public DatabaseConnectionColumnStatisticDto getColumnStatistics(@PathVariable Long connectionId, @PathVariable String schema, @PathVariable String table, @PathVariable String column, @PathVariable ColumnStatisticType statisticType) throws SQLException {
+
+        DatabaseConnection databaseConnection = repository
+                .findById(connectionId)
+                .orElseThrow(() -> new DatabaseConnectionNotFoundException(connectionId));
+
+        return statisticsService.getColumnStatistic(databaseConnection, schema, table, column, statisticType);
+    }
 }
