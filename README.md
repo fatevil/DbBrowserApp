@@ -1,4 +1,6 @@
 
+## MySQL Browswer
+
 Available at http://localhost:8080/ . Is provided with provisional HAL browser, that displays some of the REST API endpoints. Does not display the following DatabaseConnectionExtrasController endpoints:
 
 http://localhost:8080/databaseConnections/{connectionId}/schemas
@@ -16,13 +18,15 @@ http://localhost:8080/databaseConnections/{connectionId}/preview/{schema}/{table
 ### Current flaws
 
 - Too many connections Exception (fix by reusing the connections), concurrent usage threats?
-- possibility of SQL Injection
+- possibility of SQL Injection !!!
 - Error code handling
 - Insufficient SQLException handling at many cases
 - Insufficient commentary
 - 0 tests
 - use DatabaseCredentails instead of DatabaseConnection naming
+- introduce interface instead of implementation
 
 ### Considarations 
 
 - on requesting data from non-existing schemas / tables, should we return exception or just an empty output?
+- add Logging (Lombok)
