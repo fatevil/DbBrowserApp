@@ -21,6 +21,7 @@ http://localhost:8080/databaseConnections/{connectionId}/preview/{schema}/{table
 - Insufficient SQLException handling at many cases
 - Insufficient commentary
 - 0 tests
+- use DatabaseCredentails instead of DatabaseConnection naming
 
 ### Considarations 
 
