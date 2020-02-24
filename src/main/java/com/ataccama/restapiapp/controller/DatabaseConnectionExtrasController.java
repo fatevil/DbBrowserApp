@@ -66,9 +66,6 @@ public class DatabaseConnectionExtrasController {
                 .findById(connectionId)
                 .orElseThrow(() -> new DatabaseConnectionNotFoundException(connectionId));
 
-        Map<String, ForeignKey> foreignKeys = service.getForeignKeys(databaseConnection, schema, table);
-        Set<String> primaryKeys = service.getPrimaryKeys(databaseConnection, schema, table);
-
         return service.getDataPreview(databaseConnection, schema, table);
     }
 

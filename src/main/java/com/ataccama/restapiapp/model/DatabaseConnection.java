@@ -8,7 +8,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-
 /**
  * Entity class representing MySQL DB connection details.
  */
@@ -44,5 +43,4 @@ public class DatabaseConnection {
 
         return st.toString();
     }
-
 }
