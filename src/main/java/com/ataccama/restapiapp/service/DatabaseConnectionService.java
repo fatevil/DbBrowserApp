@@ -5,9 +5,9 @@ import com.ataccama.restapiapp.data.DatabaseConnectionSchemaDto;
 import com.ataccama.restapiapp.data.DatabaseConnectionTableDto;
 import com.ataccama.restapiapp.data.ForeignKey;
 import com.ataccama.restapiapp.model.DatabaseConnection;
-import com.zaxxer.hikari.HikariDataSource;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.*;
@@ -16,30 +16,11 @@ import java.util.*;
 @Service
 public class DatabaseConnectionService {
 
-    private Map<Long, Connection> map = new HashMap<>();
-
-    private synchronized Connection getConnection(DatabaseConnection databaseConnection) throws SQLException {
-        if (map.containsKey(databaseConnection.getId())) {
-            Connection connection = map.get(databaseConnection.getId());
-            if (!connection.isClosed()) {
-                return connection;
-            }
-        }
-
-        HikariDataSource datasource = new HikariDataSource();
-        datasource.setJdbcUrl(databaseConnection.getConnectionString());
-        datasource.setUsername(databaseConnection.getUsername());
-        datasource.setPassword(databaseConnection.getPassword());
-
-        datasource.setConnectionTimeout(2000);
-
-        Connection connection = datasource.getConnection();
-        map.put(databaseConnection.getId(), connection);
-        return connection;
-    }
+    @Autowired
+    private ActualConnectionService actualConnectionService;
 
     public List<DatabaseConnectionSchemaDto> getSchemas(DatabaseConnection databaseConnection) throws SQLException {
-        Connection actualConnection = getConnection(databaseConnection);
+        Connection actualConnection = actualConnectionService.getConnection(databaseConnection);
         DatabaseMetaData dbmd = actualConnection.getMetaData();
         ResultSet schemas = dbmd.getCatalogs();
 
@@ -54,7 +35,7 @@ public class DatabaseConnectionService {
     }
 
     public List<DatabaseConnectionTableDto> getTables(DatabaseConnection databaseConnection, String schema) throws SQLException {
-        Connection actualConnection = getConnection(databaseConnection);
+        Connection actualConnection = actualConnectionService.getConnection(databaseConnection);
 
         DatabaseMetaData metadata = actualConnection.getMetaData();
         ResultSet tables = metadata.getTables(schema, null, "%", null);
@@ -70,7 +51,7 @@ public class DatabaseConnectionService {
     }
 
     public List<DatabaseConnectionColumnDto> getColumnInfo(DatabaseConnection databaseConnection, String schema, String table, Set<String> primaryKeys, Map<String, ForeignKey> foreignKeys) throws SQLException {
-        Connection actualConnection = getConnection(databaseConnection);
+        Connection actualConnection = actualConnectionService.getConnection(databaseConnection);
         DatabaseMetaData metadata = actualConnection.getMetaData();
         ResultSet columns = metadata.getColumns(schema, null, table, null);
 
@@ -101,7 +82,7 @@ public class DatabaseConnectionService {
     }
 
     public Set<String> getPrimaryKeys(DatabaseConnection databaseConnection, String schema, String table) throws SQLException {
-        Connection actualConnection = getConnection(databaseConnection);
+        Connection actualConnection = actualConnectionService.getConnection(databaseConnection);
 
         DatabaseMetaData metadata = actualConnection.getMetaData();
         ResultSet resultSet = metadata.getPrimaryKeys(null, schema, table);
@@ -117,7 +98,7 @@ public class DatabaseConnectionService {
     }
 
     public Map<String, ForeignKey> getForeignKeys(DatabaseConnection databaseConnection, String schema, String table) throws SQLException {
-        Connection actualConnection = getConnection(databaseConnection);
+        Connection actualConnection = actualConnectionService.getConnection(databaseConnection);
 
         DatabaseMetaData metadata = actualConnection.getMetaData();
         ResultSet resultSet = metadata.getImportedKeys(null, schema, table);
@@ -137,7 +118,7 @@ public class DatabaseConnectionService {
 
 
     public String getDataPreview(DatabaseConnection databaseConnection, String schema, String table) throws SQLException {
-        Connection actualConnection = getConnection(databaseConnection);
+        Connection actualConnection = actualConnectionService.getConnection(databaseConnection);
 
         // not ideal, DB should be prevented from having sql injection
         // prepared statement does not allow parametrized table name
