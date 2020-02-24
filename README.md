@@ -1,7 +1,5 @@
 
-Available at http://localhost:8080/ . Is provided with provisional HAL browser, that displays some of the REST API endpoints. 
-
-Does not display DatabaseConnectionExtrasController endpoints, which are:
+Available at http://localhost:8080/ . Is provided with provisional HAL browser, that displays some of the REST API endpoints. Does not display the following DatabaseConnectionExtrasController endpoints:
 
 http://localhost:8080/databaseConnections/{connectionId}/schemas
 http://localhost:8080/databaseConnections/{connectionId}/tables/{schema}
@@ -21,3 +19,7 @@ http://localhost:8080/databaseConnections/{connectionId}/preview/{schema}/{table
 - possibility of SQL Injection
 - Error code handling
 - Insufficient SQLException handling at many cases
+
+### Considarations 
+
+- on requesting data from non-existing schemas / tables, should we return exception or just an empty output?
