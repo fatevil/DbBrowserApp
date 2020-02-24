@@ -3,6 +3,7 @@ package com.ataccama.restapiapp.controller;
 import com.ataccama.restapiapp.data.DatabaseConnectionColumnDto;
 import com.ataccama.restapiapp.data.DatabaseConnectionSchemaDto;
 import com.ataccama.restapiapp.data.DatabaseConnectionTableDto;
+import com.ataccama.restapiapp.data.ForeignKey;
 import com.ataccama.restapiapp.exception.DatabaseConnectionNotFoundException;
 import com.ataccama.restapiapp.model.DatabaseConnection;
 import com.ataccama.restapiapp.repository.DatabaseConnectionRepository;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @RestController
 public class DatabaseConnectionExtrasController {
@@ -50,6 +53,9 @@ public class DatabaseConnectionExtrasController {
                 .findById(connectionId)
                 .orElseThrow(() -> new DatabaseConnectionNotFoundException(connectionId));
 
-        return service.getColumnInfo(databaseConnection, schema, table);
+        Map<String, ForeignKey> foreignKeys = service.getForeignKeys(databaseConnection, schema, table);
+        Set<String> primaryKeys = service.getPrimaryKeys(databaseConnection, schema, table);
+
+        return service.getColumnInfo(databaseConnection, schema, table, primaryKeys, foreignKeys);
     }
 }

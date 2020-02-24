@@ -3,6 +3,8 @@ package com.ataccama.restapiapp.data;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @Builder
 public class DatabaseConnectionColumnDto {
@@ -18,6 +20,12 @@ public class DatabaseConnectionColumnDto {
     private final String isNullable;
 
     private final String isAutoincrement;
+
+    private final boolean isPrimaryKey;
+
+    private final String foreignKeyTable;
+
+    private final String foreignKeyName;
 
 }
 
