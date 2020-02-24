@@ -1,6 +1,5 @@
 package com.ataccama.restapiapp.service;
 
-import com.ataccama.restapiapp.data.ColumnStatisticType;
 import com.ataccama.restapiapp.data.DatabaseConnectionColumnStatisticDto;
 import com.ataccama.restapiapp.model.DatabaseConnection;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +32,6 @@ public class DatabaseConnectionStatisticsService {
                 .schema(schema)
                 .table(table)
                 .column(column)
-                .statistic(statisticType.name())
                 .min(min)
                 .max(max)
                 .avg(avg)
