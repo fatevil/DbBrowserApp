@@ -71,13 +71,13 @@ public class DatabaseConnectionExtrasController {
         return databaseConnectionService.getDataPreview(databaseConnection, schema, table);
     }
 
-    @GetMapping("/databaseConnections/{connectionId}/statistics/{schema}/{table}/{column}/{statisticType}")
-    public DatabaseConnectionColumnStatisticDto getColumnStatistics(@PathVariable Long connectionId, @PathVariable String schema, @PathVariable String table, @PathVariable String column, @PathVariable ColumnStatisticType statisticType) throws SQLException {
+    @GetMapping("/databaseConnections/{connectionId}/statistics/{schema}/{table}/{column}")
+    public DatabaseConnectionColumnStatisticDto getColumnStatistics(@PathVariable Long connectionId, @PathVariable String schema, @PathVariable String table, @PathVariable String column) throws SQLException {
 
         DatabaseConnection databaseConnection = repository
                 .findById(connectionId)
                 .orElseThrow(() -> new DatabaseConnectionNotFoundException(connectionId));
 
-        return statisticsService.getColumnStatistic(databaseConnection, schema, table, column, statisticType);
+        return statisticsService.getColumnStatistic(databaseConnection, schema, table, column);
     }
 }

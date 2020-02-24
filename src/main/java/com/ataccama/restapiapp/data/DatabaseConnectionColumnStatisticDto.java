@@ -15,6 +15,12 @@ public class DatabaseConnectionColumnStatisticDto {
 
     private final String statistic;
 
-    private final String result;
+    private final String min;
+
+    private final String max;
+
+    private final String avg;
+
+    private final String median;
 
 }
