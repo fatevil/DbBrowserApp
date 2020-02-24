@@ -58,4 +58,18 @@ public class DatabaseConnectionExtrasController {
 
         return service.getColumnInfo(databaseConnection, schema, table, primaryKeys, foreignKeys);
     }
+
+    @GetMapping("/databaseConnections/{connectionId}/preview/{schema}/{table}")
+    public String getDataPreview(@PathVariable Long connectionId, @PathVariable String schema, @PathVariable String table) {
+
+        DatabaseConnection databaseConnection = repository
+                .findById(connectionId)
+                .orElseThrow(() -> new DatabaseConnectionNotFoundException(connectionId));
+
+        Map<String, ForeignKey> foreignKeys = service.getForeignKeys(databaseConnection, schema, table);
+        Set<String> primaryKeys = service.getPrimaryKeys(databaseConnection, schema, table);
+
+        return service.getDataPreview(databaseConnection, schema, table);
+    }
+
 }

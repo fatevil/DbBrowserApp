@@ -6,12 +6,11 @@ import com.ataccama.restapiapp.data.DatabaseConnectionTableDto;
 import com.ataccama.restapiapp.data.ForeignKey;
 import com.ataccama.restapiapp.model.DatabaseConnection;
 import com.zaxxer.hikari.HikariDataSource;
+import net.minidev.json.JSONArray;
+import net.minidev.json.JSONObject;
 import org.springframework.stereotype.Service;
 
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.*;
 
 @Service
@@ -134,6 +133,41 @@ public class DatabaseConnectionService {
             }
 
             return map;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+    public String getDataPreview(DatabaseConnection databaseConnection, String schema, String table) {
+        try (Connection actualConnection = getConnection(databaseConnection)) {
+
+            // not ideal, DB should be prevented from having sql injection
+            // prepared statement does not allow parametrized table name
+            String sql = String.format("SELECT * FROM %s", table);
+            PreparedStatement statement = actualConnection.prepareStatement(sql);
+
+            ResultSet resultSet = statement.executeQuery();
+            ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
+
+            // get column names to create JSON later
+            List<String> columnNames = new ArrayList<>();
+            for (int i = 1; i <= resultSetMetaData.getColumnCount(); i++) {
+                columnNames.add(resultSetMetaData.getColumnName(i));
+            }
+
+            // put result set data directly to JSON
+            JSONArray array = new JSONArray();
+            while (resultSet.next()) {
+                JSONObject record = new JSONObject();
+                for (String column : columnNames) {
+                    record.put(column, resultSet.getString(column));
+                }
+                array.add(record);
+            }
+
+            return array.toJSONString();
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
