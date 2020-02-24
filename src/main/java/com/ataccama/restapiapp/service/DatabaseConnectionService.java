@@ -31,7 +31,6 @@ public class DatabaseConnectionService {
             list.add(new DatabaseConnectionSchemaDto(schema));
         }
         return list;
-
     }
 
     public List<DatabaseConnectionTableDto> getTables(DatabaseConnection databaseConnection, String schema) throws SQLException {
@@ -83,26 +82,23 @@ public class DatabaseConnectionService {
 
     public Set<String> getPrimaryKeys(DatabaseConnection databaseConnection, String schema, String table) throws SQLException {
         Connection actualConnection = actualConnectionService.getConnection(databaseConnection);
-
         DatabaseMetaData metadata = actualConnection.getMetaData();
-        ResultSet resultSet = metadata.getPrimaryKeys(null, schema, table);
 
+        ResultSet resultSet = metadata.getPrimaryKeys(null, schema, table);
         Set<String> list = new HashSet<>();
         while (resultSet.next()) {
 
             String column = resultSet.getString("COLUMN_NAME");
             list.add(column);
         }
-
         return list;
     }
 
     public Map<String, ForeignKey> getForeignKeys(DatabaseConnection databaseConnection, String schema, String table) throws SQLException {
         Connection actualConnection = actualConnectionService.getConnection(databaseConnection);
-
         DatabaseMetaData metadata = actualConnection.getMetaData();
-        ResultSet resultSet = metadata.getImportedKeys(null, schema, table);
 
+        ResultSet resultSet = metadata.getImportedKeys(null, schema, table);
         Map<String, ForeignKey> map = new HashMap<>();
         while (resultSet.next()) {
 
@@ -120,8 +116,7 @@ public class DatabaseConnectionService {
     public String getDataPreview(DatabaseConnection databaseConnection, String schema, String table) throws SQLException {
         Connection actualConnection = actualConnectionService.getConnection(databaseConnection);
 
-        // not ideal, DB should be prevented from having sql injection
-        // prepared statement does not allow parametrized table name
+        // not ideal, to avoid SQL Injection, we should only use approved values
         String sql = String.format("SELECT * FROM %s LIMIT 10", table);
         PreparedStatement statement = actualConnection.prepareStatement(sql);
 

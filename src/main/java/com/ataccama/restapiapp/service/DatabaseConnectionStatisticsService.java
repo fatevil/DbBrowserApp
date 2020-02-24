@@ -17,6 +17,10 @@ public class DatabaseConnectionStatisticsService {
     public DatabaseConnectionColumnStatisticDto getTableStatistic(DatabaseConnection databaseConnection, String schema, String table, String column) throws SQLException {
         Connection actualConnection = actualConnectionService.getConnection(databaseConnection);
 
+        // get the overall count
+        // select table ordered by the specific column
+        // take the first record with offset of half of the overall count
+
         String sql = String.format("SELECT MIN(%s) as min, MAX(%s) as max, AVG(%s) as avg FROM %s", column, column, column, table);
         PreparedStatement statement = actualConnection.prepareStatement(sql);
 
@@ -32,9 +36,8 @@ public class DatabaseConnectionStatisticsService {
                 .min(min)
                 .max(max)
                 .avg(avg)
-                .median("")
+                .median("unimplemented")
                 .build();
-
     }
 
     public DatabaseConnectionTableStatisticDto getTableStatistic(DatabaseConnection databaseConnection, String schema, String table) throws SQLException {
@@ -50,6 +53,5 @@ public class DatabaseConnectionStatisticsService {
                     .table(table)
                     .count(count)
                     .build();
-
         }
 }

@@ -7,6 +7,8 @@ http://localhost:8080/databaseConnections/{connectionId}/schemas
 http://localhost:8080/databaseConnections/{connectionId}/tables/{schema}
 http://localhost:8080/databaseConnections/{connectionId}/columns/{schema}/{table}
 http://localhost:8080/databaseConnections/{connectionId}/preview/{schema}/{table}
+http://localhost:8080/databaseConnections/{connectionId}/statistics/{schema}/{table}/{column}")
+http://localhost:8080/databaseConnections/{connectionId}/statistics/{schema}/{table}")
 
 ### Basic usage
 
@@ -17,14 +19,12 @@ http://localhost:8080/databaseConnections/{connectionId}/preview/{schema}/{table
 
 ### Current flaws
 
-- Too many connections Exception (fix by reusing the connections), concurrent usage threats?
 - possibility of SQL Injection !!!
-- Error code handling
-- Insufficient SQLException handling at many cases
 - Insufficient commentary
 - 0 tests
 - use DatabaseCredentails instead of DatabaseConnection naming
 - introduce interface instead of implementation
+- restrict public DatabaseConnection permissions
 
 ### Considarations 
 

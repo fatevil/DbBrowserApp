@@ -9,6 +9,11 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Multiple database connection pool. Synchronized for creating and acquiring java.sql.Connection instance.
+ * <p>
+ * Creates DB connections and stores them at a map. Uses Hikari DataSource.
+ */
 @Service
 public class ActualConnectionService {
 

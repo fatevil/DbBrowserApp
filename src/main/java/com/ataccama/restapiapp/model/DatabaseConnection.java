@@ -9,7 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 /**
- * Entity class representing MySQL DB connection details.
+ * Entity class representing MySQL DB connection details (credentials).
  */
 @Data
 @Entity
